@@ -1,0 +1,1 @@
+binder_call(oplus_touchdaemon, hal_oplus_touch_aidl)

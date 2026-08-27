@@ -1,0 +1,18 @@
+allow hal_oplus_touch_aidl oplus_touchdaemon_device:chr_file rw_file_perms;
+
+allow hal_oplus_touch_aidl proc_horae:file r_file_perms;
+allow hal_oplus_touch_aidl vendor_sysfs_usb_supply:dir search;
+allow hal_oplus_touch_aidl vendor_sysfs_usb_supply:file r_file_perms;
+
+allow hal_oplus_touch_aidl proc_bus_input:file r_file_perms;
+allow hal_oplus_touch_aidl input_device:dir search;
+allow hal_oplus_touch_aidl input_device:chr_file rw_file_perms;
+
+allow hal_oplus_touch_aidl vendor_persist_oplus_touch_file:dir create_dir_perms;
+allow hal_oplus_touch_aidl vendor_persist_oplus_touch_file:file create_file_perms;
+
+get_prop(hal_oplus_touch_aidl, system_oplus_touch_prop)
+set_prop(hal_oplus_touch_aidl, system_oplus_touch_prop)
+
+get_prop(hal_oplus_touch_aidl, vendor_oplus_touch_prop)
+set_prop(hal_oplus_touch_aidl, vendor_oplus_touch_prop)

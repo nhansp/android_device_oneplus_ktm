@@ -1,0 +1,3 @@
+# NFC
+type hal_tms_nfc_chip_name, fs_type, proc_type;
+type proc_tms_logger, fs_type, proc_type;

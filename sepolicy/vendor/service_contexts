@@ -1,0 +1,8 @@
+# EID
+vendor.oplus.hardware.eid.IEidDevice/default    u:object_r:hal_oplus_eid_service:s0
+
+# NFC (TMS)
+vendor.tms.tmsnfc_aidl.ITmsNfc/default    u:object_r:hal_oplus_nfc_tms_service:s0
+
+# Secure Element (TMS)
+vendor.tms.tmsese_aidl.ITmsEse/default    u:object_r:hal_secure_element_extend_service:s0

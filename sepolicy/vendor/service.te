@@ -1,0 +1,5 @@
+# EID
+type hal_oplus_eid_service, hal_service_type, service_manager_type;
+
+# NFC (TMS)
+type hal_oplus_nfc_tms_service, hal_service_type, service_manager_type;
