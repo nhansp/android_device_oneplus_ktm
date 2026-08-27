@@ -1217,7 +1217,6 @@ odm/bin/hw/vendor.oplus.hardware.eid@1.0-service
 odm/etc/vintf/manifest/manifest_oplus_eid.xml
 odm/etc/init/vendor.oplus.hardware.eid@1.0-service.rc
 vendor/lib64/vendor.qti.esepowermanager@1.0.so
-odm/lib64/vendor.oplus.hardware.esepower-V1-ndk_platform.so
 odm/lib64/vendor.oplus.hardware.nfc.esepower@1.0.so
 
 # MSM Video
