@@ -1307,7 +1307,6 @@ odm/etc/PanelChaplin/Dark_Eye_Protect_Nature.txt
 odm/etc/PanelChaplin/Dark_Eye_Protect_Vivid.txt
 odm/etc/PanelChaplin/panelchaplin
 odm/etc/vintf/manifest/vintf_manifext_aidl_panelchaplin.xml
-odm/lib64/vendor.oplus.hardware.display.MixLut3D-V1-ndk_platform.so
 
 # Fingerprint firmware
 odm/firmware/uff_gx.b00
