@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- The properties of the face auth front camera for outer display in pixels.
+         Taken from the stock ro.oplus.display.screenhole.positon=599,45:673,119,
+         which gives a 74x74 box centered on 636,82. -->
+    <integer-array name="config_face_auth_props">
+        <item>636</item>
+        <item>82</item>
+        <item>37</item>
+    </integer-array>
+
+    <!-- Logical id of the front camera. config_face_auth_props is not read
+         unless this is set. -->
+    <string translatable="false" name="config_protectedCameraId">1</string>
+
+    <!-- Bounding path of the front camera. Must be parsable whenever
+         config_protectedCameraId is set, even though it is only drawn when
+         config_enableDisplayCutoutProtection is true. -->
+    <string translatable="false" name="config_frontBuiltInDisplayCutoutProtection">m 673,82 a 37,37 0 0 0 -74,0 37,37 0 0 0 74,0 z</string>
+</resources>
