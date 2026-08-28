@@ -1,5 +1,5 @@
 ## All proprietary files from this list, unless pinned and noted otherwise,
-## are from OnePlus Ace 6 (PLQ110_16.0.8.300(CN01)).
+## are from OnePlus Ace 6 (PLQ110_11.A.01).
 
 abl.img;AB
 aop.img;AB
