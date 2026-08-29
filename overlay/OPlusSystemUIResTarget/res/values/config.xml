@@ -21,4 +21,11 @@
          config_protectedCameraId is set, even though it is only drawn when
          config_enableDisplayCutoutProtection is true. -->
     <string translatable="false" name="config_frontBuiltInDisplayCutoutProtection">m 673,82 a 37,37 0 0 0 -74,0 37,37 0 0 0 74,0 z</string>
+
+    <!-- Comma-separated list of packages to exclude from camera protection e.g.
+    "com.android.systemui,com.android.xyz" -->
+    <string translatable="false" name="config_cameraProtectionExcludedPackages">com.google.android.as</string>
+
+    <!--  Flag to turn on the rendering of the above path or not  -->
+    <bool name="config_enableDisplayCutoutProtection">true</bool>
 </resources>
