@@ -17,6 +17,12 @@
          only, so that both ends of the statusbar are inset equally -->
     <dimen name="rounded_corner_content_padding">20dp</dimen>
 
+    <!-- Inset the shade and QS panel to match the statusbar. Overriding these
+         aliases rather than notification_side_paddings_single, which also backs
+         notification_section_divider_height. -->
+    <dimen name="qs_horizontal_margin">20dp</dimen>
+    <dimen name="notification_shade_content_margin_horizontal">20dp</dimen>
+
     <!-- Location on the screen of the center of the physical power button. This is a reasonable
     default that should be overridden by device-specific overlays. -->
     <dimen name="physical_power_button_center_screen_location_y">1000px</dimen>
