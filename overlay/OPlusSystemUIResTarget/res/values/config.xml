@@ -20,7 +20,7 @@
     <!-- Bounding path of the front camera. Must be parsable whenever
          config_protectedCameraId is set, even though it is only drawn when
          config_enableDisplayCutoutProtection is true. -->
-    <string translatable="false" name="config_frontBuiltInDisplayCutoutProtection">m 691,82 a 55,55 0 0 0 -110,0 55,55 0 0 0 110,0 z</string>
+    <string translatable="false" name="config_frontBuiltInDisplayCutoutProtection">m 688,82 a 52,52 0 0 0 -104,0 52,52 0 0 0 104,0 z</string>
 
     <!-- Comma-separated list of packages to exclude from camera protection e.g.
     "com.android.systemui,com.android.xyz" -->
