@@ -29,6 +29,10 @@
 
     <!-- Location on the screen of the center of the physical power button. This is a reasonable
     default that should be overridden by device-specific overlays. -->
+    <!-- Hidden on a single-user device, but still reserves width to the end
+         of the keyguard status icons. -->
+    <dimen name="multi_user_avatar_keyguard_size">0dp</dimen>
+
     <dimen name="physical_power_button_center_screen_location_y">1000px</dimen>
 
     <!-- Default device corner radius, used for assist UI -->
