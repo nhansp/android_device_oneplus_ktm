@@ -9,4 +9,9 @@
 
     <!-- Whether to show peak refresh rate in display settings -->
     <bool name="config_show_peak_refresh_rate_switch">true</bool>
+
+    <!-- Settings renders a plain switch at the default of 1. The vibrator
+         reports AMPLITUDE_CONTROL and perform() already maps LIGHT/MEDIUM/
+         STRONG to distinct magnitudes, so all three levels are usable. -->
+    <integer name="config_vibration_supported_intensity_levels">3</integer>
 </resources>
