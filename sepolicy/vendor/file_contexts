@@ -15,3 +15,7 @@
 /(odm|vendor/odm)/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service    u:object_r:hal_oplus_touch_aidl_exec:s0
 /dev/hbp[0-9]                                                          u:object_r:oplus_touchdaemon_device:s0
 /dev/hbp_core                                                          u:object_r:oplus_touchdaemon_device:s0
+
+# Our thermal HAL replaces the QTI one; reuse the AOSP domain, which
+# sepolicy_vndr's domain.te already grants sysfs_thermal reads to.
+/vendor/bin/hw/android\.hardware\.thermal-service\.oplus    u:object_r:hal_thermal_default_exec:s0

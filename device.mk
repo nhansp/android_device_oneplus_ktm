@@ -49,6 +49,13 @@ PRODUCT_PACKAGES += \
 # Power
 $(call soong_config_set,qtipower,mode_ext_lib,power-ext-oplus)
 
+# Thermal
+PRODUCT_PACKAGES += \
+    android.hardware.thermal-service.oplus
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/thermal/thermal_sensors.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal_sensors.conf
+
 # Recovery
 PRODUCT_PACKAGES += \
     hbp-setup 
