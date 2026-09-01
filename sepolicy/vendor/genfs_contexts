@@ -5,3 +5,20 @@ genfscon proc /tmsdev/logger        u:object_r:proc_tms_logger:s0
 genfscon sysfs /devices/platform/soc/8c0000.qcom,qupv3_2_geni_se/88c000.qcom,qup_uart/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/ac0000.qcom,qupv3_1_geni_se/a8c000.i2c/i2c-8/8-000e/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/soc/soc:hbp@0/wakeup u:object_r:sysfs_wakeup:s0
+
+# Haptics. Upstream sepolicy_vndr labels only primitive_duration and
+# visense_enabled; the rest of the class default to sysfs.
+genfscon sysfs /class/qcom-haptics/cali_time                u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/cl_vmax                  u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/fifo_vmax                u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/livetap_support          u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/lra_cal_cl_t_lra_us      u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/lra_cal_rc_clk_cal_count u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/lra_calibration          u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/lra_frequency_hz         u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/lra_impedance            u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/register_write           u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/t_lra_us                 u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/trig_support             u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/vibrator_type            u:object_r:vendor_sysfs_haptics:s0
+genfscon sysfs /class/qcom-haptics/vmax                     u:object_r:vendor_sysfs_haptics:s0
