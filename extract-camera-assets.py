@@ -80,7 +80,38 @@ def main():
             rel = os.path.relpath(full, STOCK)
             stock_cam.append(rel)
 
+    def _excluded(path):
+        """-> reason, or None if the file is safe for PRODUCT_COPY_FILES."""
+        base = os.path.basename(path)
+        if base in ("Android.mk", "Android.bp", "Android.mk.orig"):
+            return "stray build file (Kati/Soong would try to read it)"
+        try:
+            with open(path, "rb") as fh:
+                if fh.read(4) == b"\x7fELF":
+                    return "ELF prebuilt (PRODUCT_COPY_FILES forbids these)"
+        except OSError:
+            pass
+        return None
+
     missing = sorted(set(stock_cam) - listed)
+    skipped = []
+    keep = []
+    for rel in missing:
+        why = _excluded(os.path.join(STOCK, rel))
+        if why:
+            skipped.append((rel, why))
+            stale = os.path.join(PROP, rel)          # drop it if a previous run copied it
+            if os.path.exists(stale):
+                os.remove(stale)
+        else:
+            keep.append(rel)
+    missing = keep
+    if skipped:
+        print("excluded %d file(s) from PRODUCT_COPY_FILES:" % len(skipped))
+        for rel, why in skipped:
+            print("    %s\n        %s" % (rel, why))
+        print("    ^ if any of these are actually needed, add a soong module for them")
+
     for rel in missing:
         d = os.path.join(PROP, rel)
         os.makedirs(os.path.dirname(d), exist_ok=True)
