@@ -22,3 +22,36 @@ genfscon sysfs /class/qcom-haptics/t_lra_us                 u:object_r:vendor_sy
 genfscon sysfs /class/qcom-haptics/trig_support             u:object_r:vendor_sysfs_haptics:s0
 genfscon sysfs /class/qcom-haptics/vibrator_type            u:object_r:vendor_sysfs_haptics:s0
 genfscon sysfs /class/qcom-haptics/vmax                     u:object_r:vendor_sysfs_haptics:s0
+
+# stock vendor_sepolicy.cil:6,7,62
+genfscon proc /oplus_scheduler/sched_assist                u:object_r:oplus_scheduler_sched_assist_proc:s0
+genfscon proc /oplus_scheduler/sched_assist/im_flag_app    u:object_r:oplus_imflag_app_proc:s0
+genfscon proc /oplus_scheduler/sched_assist/ux_task_app    u:object_r:oplus_ux_task_app_proc:s0
+
+# --- hal_camera_default delta ---
+# stock vendor_sepolicy.cil:57
+genfscon proc /sys/kernel/sched_assist_scene         u:object_r:oplus_sched_assist_scene_proc:s0
+# stock vendor_sepolicy.cil:196
+genfscon proc /cam_kern_fb                           u:object_r:oplus_proc_cam_kern_fb:s0
+# stock vendor_sepolicy.cil:52,113,121,122
+genfscon proc /oplus_cl/cl_aware_camera_usage        u:object_r:proc_cl_ctrl:s0
+genfscon proc /oplus_cl/cl_frame_ctl                 u:object_r:proc_cl_ctrl:s0
+genfscon proc /oplus_cl/cl_core_ctl                  u:object_r:proc_cl_ctrl:s0
+genfscon proc /oplus_cl/cl_glthread                  u:object_r:proc_cl_ctrl:s0
+# stock vendor_sepolicy.cil:80
+genfscon proc /oplus_frame_boost/sys_ctrl            u:object_r:proc_frame_boost_sys_ctrl:s0
+# stock vendor_sepolicy.cil:201
+genfscon proc /qcom_flash                            u:object_r:proc_flash_light_file:s0
+# ToF / laser AF (12 stock genfscon lines, all cam_laser_sysfs)
+genfscon sysfs /kernel/tof_control/                                          u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/request_ram_patch                         u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/                                     u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/app0_get_distance                    u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/app0_get_fac_calib                   u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/app0_read_peak_crosstalk             u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/capture                              u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/iterations                           u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /kernel/tof_control/app0/period                               u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /class/i2c-dev/i2c-3/device/3-0041/request_ram_patch          u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /class/i2c-dev/i2c-3/device/3-0041/app0/app0_get_fac_calib    u:object_r:cam_laser_sysfs:s0
+genfscon sysfs /class/i2c-dev/i2c-3/device/3-0041/app0/capture               u:object_r:cam_laser_sysfs:s0

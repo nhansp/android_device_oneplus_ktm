@@ -1,0 +1,124 @@
+# OPlus stock camera app - vendor half.
+#
+# Goes in a BOARD_VENDOR_SEPOLICY_DIRS directory.  It can reference
+# opluscamera_app because that type is declared in a SYSTEM_EXT_PUBLIC dir
+# (see ../system_ext/public/opluscamera_app.te), exactly the way stock does it
+# (the stock vendor CIL calls the type "opluscamera_app_202404").
+#
+# Source: ktm-16.0.10 vendor_sepolicy.cil lines 13428, 15383-15386,
+# 16212-16225, 19722-19736 (46 CIL lines).
+#
+# TYPE RENAMES applied (stock name -> our tree's name).  Every mapping below
+# was verified by grepping the declaration out of our tree:
+#   hal_camera_client              -> hal_camera (AOSP attr, unchanged)
+#   hal_urcc_client                -> vendor_hal_oplus_urcc_client
+#                                     hardware/oplus/sepolicy/qti/public/attributes:
+#                                     vendor_hal_attribute(oplus_urcc)
+#   vendor_hal_dspmanager_client   -> same name; declared by
+#                                     device/qcom/sepolicy_vndr/sm8750/generic/vendor/common/dspservice.te
+#   hal_orms_hwservice             -> vendor_hal_orms_hwservice
+#                                     hardware/oplus/sepolicy/qti/vendor/hwservice.te:20
+#   hal_osense_client_hwservice    -> vendor_hal_osense_hwservice
+#                                     hardware/oplus/sepolicy/qti/vendor/hwservice.te:23
+#   hal_cameraextension_hwservice  -> vendor_hal_camera_extension_hwservice
+#                                     hardware/oplus/sepolicy/qti/vendor/hwservice.te:2
+#   hal_sendextcamcmd_hwservice    -> hal_camera_hwservice
+#                                     our hwservice_contexts already labels
+#                                     vendor.oplus.hardware.sendextcamcmd::ISendExtCamCmdService
+#                                     as hal_camera_hwservice
+
+###
+### HAL client attributes.
+### CIL: (typeattributeset hal_camera_client (... opluscamera_app_202404 ...))
+###      (typeattributeset hal_urcc_client (...))
+###      (typeattributeset vendor_hal_dspmanager_client (...))
+### This is what actually lets the app talk to the camera provider process and
+### is the single most important rule in this file.
+###
+hal_client_domain(opluscamera_app, hal_camera)
+hal_client_domain(opluscamera_app, vendor_hal_oplus_urcc)
+hal_client_domain(opluscamera_app, vendor_hal_dspmanager)
+
+###
+### hwservicemanager lookups (CIL 16212-16213, 19725-19726, 19732, 19734)
+###
+allow opluscamera_app {
+    vendor_hal_orms_hwservice
+    vendor_hal_osense_hwservice
+    vendor_hal_camera_extension_hwservice
+    hal_camera_hwservice
+}:hwservice_manager find;
+
+###
+### Hexagon DSP / adsprpc - the camera app runs QNN models on the cDSP.
+### CIL 19722-19724
+###
+# TRIMMED per ~/re/camera/sweep/neverallow.md V2/V3: stock has
+#   { ioctl open read write }, but
+#   device/qcom/sepolicy_vndr/sm8750/generic/vendor/common/domain.te:115
+#     neverallow { appdomain -shell ... } vendor_qdsp_device:chr_file ~{ioctl read};
+#   domain.te:114
+#     neverallow { domain -init -vendor_init -ueventd } vendor_qdsp_device:chr_file ~{r_file_perms};
+# Stock only gets away with it because OPlus patched QTI's domain.te.  That
+# neverallow finding is machine-verified (real checkpolicy run), unlike my own
+# source read, so it wins.
+allow opluscamera_app vendor_qdsp_device:chr_file { ioctl read };
+
+# DROPPED per neverallow.md V1:
+#   domain.te:72-95  neverallow { domain -... } vendor_xdsp_device:chr_file *;
+# is an absolute prohibition with no appdomain exemption.  Stock rule was
+#   allow opluscamera_app vendor_xdsp_device:chr_file r_file_perms;   (CIL 19723)
+# Both nodes are Hexagon fastRPC ioctl endpoints; watch logcat for
+# "avc: denied ... vendor_qdsp_device" before widening either.
+
+allow opluscamera_app adsprpcd_file:dir { getattr search };
+
+###
+### OPlus scheduler "sched_assist" UX-boost proc interface.
+### CIL 16215-16216, 16222, 16224-16225 (+ 19728-19729, 19733 duplicates)
+### The 0x2700-0x2701 xperm range is the ux_task_app ioctl pair.
+###
+allow opluscamera_app oplus_scheduler_sched_assist_proc:dir search;
+allow opluscamera_app oplus_scheduler_sched_assist_proc:file rw_file_perms;
+allow opluscamera_app oplus_imflag_app_proc:file rw_file_perms;
+allow opluscamera_app oplus_ux_task_app_proc:file rw_file_perms;
+allowxperm opluscamera_app oplus_ux_task_app_proc:file ioctl { 0x2700-0x2701 };
+
+###
+### Underwater-mode property (CIL 16219-16221)
+###
+set_prop(opluscamera_app, vendor_oplus_underwater_prop)
+
+###
+### /data/vendor/camera_remote_dump (CIL 19735-19736)
+###
+allow opluscamera_app vendor_camera_remote_dump_file:dir create_dir_perms;
+allow opluscamera_app vendor_camera_remote_dump_file:file create_file_perms;
+
+###
+### /data/vendor/camera_update, /data/vendor/cam_alog, /data/vendor/camera_rfi ...
+### CIL 19730-19731 (vendor) and 9549-9550 (system_ext).  The type is declared
+### in hardware/oplus/sepolicy/qti/vendor/file.te (a VENDOR dir), so BOTH stock
+### rule sets have to be expressed here.
+###
+allow opluscamera_app vendor_camera_update_data_file:dir create_dir_perms;
+allow opluscamera_app vendor_camera_update_data_file:file create_file_perms;
+
+###
+### tmpfs scratch (CIL 16223)
+###
+allow opluscamera_app tmpfs:file { open read write };
+
+###
+### Fan-in from vendor/core domains.
+###
+# CIL 13428 - cameraserver reprioritises the camera app's threads
+allow cameraserver opluscamera_app:process setsched;
+
+# CIL 15383-15386, 18982 - the URCC daemon samples the app.
+# Stock domain hal_urcc_default -> ours is hal_oplus_urcc_aidl
+# (hardware/oplus/sepolicy/qti/vendor/hal_oplus_urcc_aidl.te:1).
+allow hal_oplus_urcc_aidl opluscamera_app:dir search;
+allow hal_oplus_urcc_aidl opluscamera_app:file { getattr open read };
+allow hal_oplus_urcc_aidl opluscamera_app:process getattr;
+allow hal_oplus_urcc_aidl self:capability sys_ptrace;

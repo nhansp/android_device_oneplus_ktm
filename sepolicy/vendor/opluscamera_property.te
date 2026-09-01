@@ -1,0 +1,19 @@
+# Underwater-mode camera property.
+#
+# CAUTION, deliberate deviation from stock:
+# stock declares vendor_oplus_underwater_prop with
+#   property_type, system_property_type, system_public_property_type
+# (vendor_sepolicy.cil:1068-1070) even though it lives in the VENDOR policy and
+# is labelled by vendor_property_contexts:474.  That combination only survives
+# because OPlus turns off BUILD_BROKEN_TREBLE_SYSPROP_NEVERALLOW-style checks.
+# On a stock-neverallow EvolutionX build, declaring a system_property_type from
+# a vendor sepolicy dir trips the treble sysprop neverallows.
+#
+# Use the vendor-owned form instead; the app is a coredomain, so it needs the
+# property to be readable+settable across the treble boundary:
+vendor_internal_prop(vendor_oplus_underwater_prop)
+#
+# If that turns out to be too strict at runtime (coredomain writing a
+# vendor_internal_prop), switch to:
+#   vendor_public_prop(vendor_oplus_underwater_prop)
+# and keep the property_contexts entry as-is.

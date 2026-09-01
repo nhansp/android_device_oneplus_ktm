@@ -1,0 +1,17 @@
+# New file/fs types required by opluscamera_app.
+# Attribute lists transcribed verbatim from the stock CIL typeattributeset
+# membership (system_ext_sepolicy.cil) and cross-checked against the
+# LineageOS decompiler output (sepolicy-decompiled/system_ext/private/file.te).
+
+# App-private data dir label.  Referenced by seapp_contexts.
+type opluscamera_app_data_file, app_data_file_type, core_data_file_type, data_file_type, file_type;
+
+# /data/system/camera_rus - camera "remote update service" config drop
+type data_system_camera_rus, core_data_file_type, data_file_type, file_type;
+
+# /proc/oplus_binder - OPlus binder introspection node (kernel feature).
+# mlstrustedobject because app domains (mlstrustedsubject) touch it.
+type oplus_binder_proc, fs_type, mlstrustedobject, proc_type;
+
+# /sys/module/oplus_bsp_aizerofs/parameters/* and /sys/kernel/aizerofs/*
+type sysfs_aizerofs, fs_type, sysfs_type;

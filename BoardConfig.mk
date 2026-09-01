@@ -36,6 +36,7 @@ TARGET_RECOVERY_UI_MARGIN_HEIGHT := 103
 # SELinux
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 
 # Include the proprietary files BoardConfig.
 include vendor/oneplus/ktm/BoardConfigVendor.mk

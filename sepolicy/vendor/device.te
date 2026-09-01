@@ -1,0 +1,3 @@
+# /dev/osvelte - OPlus "svelte" memory telemetry char device.
+# stock vendor_file_contexts:1917 ; CIL typeattributeset: dev_type, mlstrustedobject
+type osvelte_device, dev_type, mlstrustedobject;

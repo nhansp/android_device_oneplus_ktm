@@ -1,0 +1,2 @@
+# CIL 9753
+allow priv_app opluscamera_app_data_file:file { getattr open read };

@@ -15,3 +15,20 @@
 /(odm|vendor/odm)/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service    u:object_r:hal_oplus_touch_aidl_exec:s0
 /dev/hbp[0-9]                                                          u:object_r:oplus_touchdaemon_device:s0
 /dev/hbp_core                                                          u:object_r:oplus_touchdaemon_device:s0
+
+# stock vendor_file_contexts:1527
+/data/vendor/camera_remote_dump(/.*)?     u:object_r:vendor_camera_remote_dump_file:s0
+
+# --- hal_camera_default delta ---
+# stock vendor_file_contexts:1917
+/dev/osvelte                                            u:object_r:osvelte_device:s0
+# stock vendor_file_contexts:1802
+/mnt/vendor/persist/dual_camera_calibration(/.*)?       u:object_r:persist_camera_calibration_file:s0
+# stock vendor_file_contexts:1804,2046,2059,2078,2116-2118
+/sys/devices/platform/vendor/vendor:motor_pl(/.*)?      u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/mode                                   u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/speed                                  u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/enable                                 u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/sw_switch                              u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/hall_data                              u:object_r:oplus_sys_motor_file:s0
+/sys/class/motor/direction                              u:object_r:oplus_sys_motor_file:s0

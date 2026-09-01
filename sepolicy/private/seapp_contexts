@@ -1,0 +1,16 @@
+# Stock ktm system_ext_seapp_contexts lines 44-46.
+#
+# seinfo=oplus_app is minted from the APK SIGNING CERT via
+# system_ext_mac_permissions.xml (see mac_permissions.xml in this dir).
+#
+# Only the com.oplus.camera line is enabled: the ktm dump ships no
+# com.android.oemextensions APK at all, and its com.android.cameraextensions
+# (system/app/CameraExtensionsProxy) is signed with a DIFFERENT OPlus cert
+# (sha256 fc98dae63ad39626c8c67fbe83f2f06f74932a9cd146b92cecfc6a047a904386),
+# so on our build that package is the AOSP one signed with OUR platform key
+# and would never match seinfo=oplus_app.  See OPEN QUESTIONS in README.md.
+user=_app seinfo=oplus_app name=com.oplus.camera domain=opluscamera_app type=opluscamera_app_data_file
+
+# Stock also has (kept here for reference, intentionally NOT enabled):
+# user=_app seinfo=oplus_app name=com.android.cameraextensions domain=opluscamera_app type=opluscamera_app_data_file
+# user=_app seinfo=oplus_app name=com.android.oemextensions domain=opluscamera_app type=opluscamera_app_data_file

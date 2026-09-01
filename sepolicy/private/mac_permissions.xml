@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  seinfo=oplus_app for the stock OPlus camera app.
+
+  The signature below is the RAW DER of the OplusCamera.apk v1 (JAR) signing
+  certificate, hex-encoded.  system/sepolicy/tools/insertkeys.py passes any
+  signature= value that is not a @TAG through verbatim (ReplaceTags.startElement
+  substitutes only when `value in self._keyMap`), so no keys.conf entry and no
+  .pem file are needed.
+
+  Provenance / cross-check (both computed on the builder):
+    ktm-16.0.10 system_ext_mac_permissions.xml <signer> for com.oplus.camera
+      -> 1007 bytes DER, sha256
+         b0a9bbfc05eee5e7d0a2c97c030586e15bb3301152078f54473bb82df6d8c818
+    META-INF/CERT.RSA of my_product/app/OplusCamera/OplusCamera.apk
+      -> 1007 bytes DER, same sha256
+    vendor/oneplus/ktm-opluscamera/proprietary/product/app/OplusCamera/OplusCamera.apk
+      -> same sha256
+    Subject: C=CN, ST=GuangDong, L=DongGuan, O=Oplus, OU=OSTeam,
+             CN=AndroidTeam, emailAddress=oplus@oplus.com
+  The two hex strings are byte-for-byte identical (2014 hex chars).
+
+  NOTE: apksigner could not be used - there is no JRE on the builder.  The DER
+  was pulled straight out of the PKCS#7 SignedData in META-INF/CERT.RSA and
+  parsed with python-cryptography (x509.load_der_x509_certificate).
+
+  The APK must be installed PRESIGNED (LOCAL_CERTIFICATE := PRESIGNED) or this
+  will never match.
+
+  Stock also maps this seinfo onto com.android.cameraextensions and
+  com.android.oemextensions, but under a DIFFERENT signer cert
+  (sha256 fc98dae63ad39626c8c67fbe83f2f06f74932a9cd146b92cecfc6a047a904386).
+  Neither package ships in a form we reuse, so that signer is omitted.
+-->
+<policy>
+    <signer signature="308203eb308202d3a003020102020900f2eefcd200c718b9300d06092a864886f70d010105050030818b310b300906035504061302434e3112301006035504080c094775616e67446f6e673111300f06035504070c08446f6e674775616e310e300c060355040a0c054f706c7573310f300d060355040b0c064f535465616d3114301206035504030c0b416e64726f69645465616d311e301c06092a864886f70d010901160f6f706c7573406f706c75732e636f6d301e170d3230313230313130323433325a170d3438303431383130323433325a30818b310b300906035504061302434e3112301006035504080c094775616e67446f6e673111300f06035504070c08446f6e674775616e310e300c060355040a0c054f706c7573310f300d060355040b0c064f535465616d3114301206035504030c0b416e64726f69645465616d311e301c06092a864886f70d010901160f6f706c7573406f706c75732e636f6d30820122300d06092a864886f70d01010105000382010f003082010a0282010100dad11b4b9c868f9e3d69b8e0aaa3714ee2383fa5901ffb578f27bc53d9098b37953ce5c7367baa9f20e663b27ec60a86a8dbaf0d55dd64ca68cbcbf2e7bc321d6512d5d40f0bc6a483b524d5cfdeb2ed3d975fa035d698ea651bdb2e632206123253d1e8b9dcdb60029f2a5cd778698c4fa8a9f5814b3b39868b779a768e249111aa93addb53fc2b87143ee6f09a91c78b16c720a3bccd7ff898838935867c63fec1da788222e03d40ceb61e3706960192a1485830bd6909061a1af1b38f2fe464ca0049b640bfe51b150f72380e19355477cfcc2e1f26398c6a89867f8dd52a07f6a17ab6da2a8a064e652b0c9307c350b0b18a576d37dcb4b6926bfd2898750203010001a350304e301d0603551d0e0416041449440f972551ef8208dc312b7f76aa04641cc090301f0603551d2304183016801449440f972551ef8208dc312b7f76aa04641cc090300c0603551d13040530030101ff300d06092a864886f70d01010505000382010100d0c2de0dfca9692188c8f82531dca858f9c085264ed233633875689cc213383b088cd72b5d69adaaa60519238625d4b5883418e8f26d38f873dbefc0cbdc78fa538ad58e14093ccd75ef2de0eaf92b4de41c1236d563e017f57d546dbe9b2faee71914bc1caa44904bfeb4b6877a6b5dd77f817d8a76c374d09991c2b3bc18746971e4e9f13bc7bc0c26351d531fb08b8f28af6ccf8bc9b664e187a44fcdd9f9fe87de76ebbee88ae502c1d1cb20643463f8dea6d34498294bba1bdb75d9ed51935a8d5d45ca529b80013d6a47b0a94d1f3038bb30f21f43ddac2acfa4c723672dc544090040f3d6c831ad477d2860f87ef59b99f2cceb94e59eecc8bb4bb8c9">
+        <package name="com.oplus.camera">
+            <seinfo value="oplus_app"/>
+        </package>
+    </signer>
+</policy>
