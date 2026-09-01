@@ -1,2 +1,6 @@
 # IFAA
 sys.oplus.ifaa.model=ONEPLUS-R24851
+
+# Media. Unset, AOSP's search path takes the first media_profiles_V1_0.xml it
+# finds, which caps every app at 1080p30. The full table ships alongside it.
+media.settings.xml=/odm/etc/camera/media_profiles.xml
