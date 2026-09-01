@@ -153,6 +153,31 @@ def main():
                 )
     print("xml: %d normalised, all parse" % fixed)
 
+    # --------------- pre-flight the presigned APK ---------------
+    # Android.bp declares OplusCamera as presigned + privileged + preprocessed.
+    # Run the build system's own checker now rather than discovering a
+    # violation minutes into a build. See the module comment in Android.bp.
+    checker = os.path.join(_ROOT, "build/soong/scripts/check_prebuilt_presigned_apk.py")
+    apk = os.path.join(PROP, "product/app/OplusCamera/OplusCamera.apk")
+    if os.path.isfile(checker) and os.path.isfile(apk):
+        bin_dir = os.path.join(_ROOT, "prebuilts/sdk/tools/linux/bin")
+        r = subprocess.run(
+            [sys.executable, checker,
+             "--aapt2", os.path.join(bin_dir, "aapt2"),
+             "--zipalign", os.path.join(bin_dir, "zipalign"),
+             "--preprocessed", "--privileged", "--uncompress-priv-app-dex",
+             apk, os.path.join(TREE, ".apk-check.stamp")],
+            capture_output=True, text=True,
+        )
+        if r.returncode != 0:
+            raise SystemExit(
+                "presigned APK check failed -- this would break the build:\n  %s"
+                % (r.stdout + r.stderr).strip()
+            )
+        print("apk: presigned/privileged/preprocessed checks pass")
+    else:
+        print("apk: checker or apk missing, skipped")
+
     # ---------------- makefiles ----------------
     part_var = {"PRODUCT": "$(TARGET_COPY_OUT_PRODUCT)", "ODM": "$(TARGET_COPY_OUT_ODM)",
                 "SYSTEM_EXT": "$(TARGET_COPY_OUT_SYSTEM_EXT)"}
