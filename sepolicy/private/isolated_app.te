@@ -1,3 +1,0 @@
-# CIL 9256-9257
-allow isolated_app opluscamera_app_data_file:dir search;
-allow isolated_app opluscamera_app_data_file:file { getattr read write };

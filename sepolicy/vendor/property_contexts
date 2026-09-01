@@ -1,4 +1,1 @@
 vendor.oplus.touch.daemon.    u:object_r:vendor_oplus_touch_prop:s0
-
-# stock vendor_property_contexts:474
-vendor.oplus.under.water.camera.status    u:object_r:vendor_oplus_underwater_prop:s0

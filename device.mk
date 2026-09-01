@@ -77,6 +77,7 @@ $(call inherit-product, device/oneplus/sm8750-common/common.mk)
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/oneplus/ktm/ktm-vendor.mk)
 
-# Inherit the stock camera assets. Ships the odm/etc/camera files our blob list
-# misses; the OPlus camera app itself stays behind TARGET_SHIP_OPLUS_CAMERA_APP.
+# Inherit the stock camera package. Ships the odm/etc/camera assets our blob
+# list misses, and the OPlus camera app as a privileged prebuilt that overrides
+# Aperture and Camera2.
 $(call inherit-product, vendor/oneplus/ktm-opluscamera/ktm-opluscamera-vendor.mk)

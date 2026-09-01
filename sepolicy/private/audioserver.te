@@ -1,2 +1,0 @@
-# CIL 3785: audioserver walks /proc/<opluscamera_app pid>
-allow audioserver opluscamera_app:dir { getattr search };

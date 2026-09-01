@@ -1,5 +1,0 @@
-# stock system_ext_file_contexts:177
-/dev/aizerofs                     u:object_r:oplus_aizerofs_device:s0
-
-# stock system_ext_file_contexts:153
-/data/system/camera_rus(/.*)?     u:object_r:data_system_camera_rus:s0

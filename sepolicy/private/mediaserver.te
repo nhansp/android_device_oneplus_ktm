@@ -1,7 +1,0 @@
-# CIL 5207-5208: mediaserver reads /proc/<opluscamera_app pid>/...
-allow mediaserver opluscamera_app:dir { open read search };
-allow mediaserver opluscamera_app:file { getattr map open read };
-
-# CIL 9295-9296
-allow mediaserver opluscamera_app_data_file:dir search;
-allow mediaserver opluscamera_app_data_file:file { append getattr ioctl lock map read write };

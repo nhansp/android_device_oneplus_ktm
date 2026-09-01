@@ -1,3 +1,0 @@
-# /dev/aizerofs - OPlus AI zero-copy fs char device.
-# CIL: (type oplus_aizerofs_device) + typeattributeset dev_type/mlstrustedobject
-type oplus_aizerofs_device, dev_type, mlstrustedobject;

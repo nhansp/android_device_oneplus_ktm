@@ -1,30 +1,3 @@
 # NFC
 type hal_tms_nfc_chip_name, fs_type, proc_type;
 type proc_tms_logger, fs_type, proc_type;
-
-# New vendor file types for the camera stack.
-# Attribute lists reconstructed from the stock vendor_sepolicy.cil
-# typeattributeset membership (see README.md "How the type decls were derived").
-
-# /data/vendor/camera_remote_dump  (stock vendor_file_contexts:1527)
-type vendor_camera_remote_dump_file, data_file_type, file_type;
-
-# /proc/oplus_scheduler/sched_assist and its two writable children.
-# mlstrustedobject: app domains are mlstrustedsubject and write these.
-type oplus_scheduler_sched_assist_proc, fs_type, mlstrustedobject, proc_type;
-type oplus_imflag_app_proc, fs_type, mlstrustedobject, proc_type;
-type oplus_ux_task_app_proc, fs_type, mlstrustedobject, proc_type;
-
-###
-### Types used only by the hal_camera_default delta (see hal_camera_default.te).
-### Attribute lists transcribed from stock vendor_sepolicy.cil typeattributeset
-### membership.
-###
-type oplus_sched_assist_scene_proc, fs_type, mlstrustedobject, proc_type;
-type oplus_proc_cam_kern_fb, fs_type, proc_type;
-type proc_cl_ctrl, fs_type, mlstrustedobject, proc_type;
-type proc_frame_boost_sys_ctrl, fs_type, mlstrustedobject, proc_type;
-type proc_flash_light_file, fs_type, proc_type;
-type oplus_sys_motor_file, fs_type, sysfs_type;
-type cam_laser_sysfs, fs_type, sysfs_type;
-type persist_camera_calibration_file, file_type;
