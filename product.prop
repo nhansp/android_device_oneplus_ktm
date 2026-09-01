@@ -1,2 +1,6 @@
 # Display
 ro.sf.lcd_density=560
+
+# Audio. The spatializer effect is present and reports MULTICHANNEL, but
+# AudioService bails before querying it unless this is set.
+ro.audio.spatializer_enabled=true
