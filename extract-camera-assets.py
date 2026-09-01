@@ -153,30 +153,61 @@ def main():
                 )
     print("xml: %d normalised, all parse" % fixed)
 
-    # --------------- pre-flight the presigned APK ---------------
-    # Android.bp declares OplusCamera as presigned + privileged + preprocessed.
-    # Run the build system's own checker now rather than discovering a
-    # violation minutes into a build. See the module comment in Android.bp.
-    checker = os.path.join(_ROOT, "build/soong/scripts/check_prebuilt_presigned_apk.py")
+    # --------------- append the OPlus framework dex ---------------
+    # Stock's 33 dex carry none of the com.oplus.* framework classes the app
+    # touches before onCreate. Append them from the jars stock keeps on
+    # BOOTCLASSPATH and in product_overlay/framework. See AGENTS.md 21aj.
+    import zipfile
+
     apk = os.path.join(PROP, "product/app/OplusCamera/OplusCamera.apk")
-    if os.path.isfile(checker) and os.path.isfile(apk):
-        bin_dir = os.path.join(_ROOT, "prebuilts/sdk/tools/linux/bin")
-        r = subprocess.run(
-            [sys.executable, checker,
-             "--aapt2", os.path.join(bin_dir, "aapt2"),
-             "--zipalign", os.path.join(bin_dir, "zipalign"),
-             "--preprocessed", "--privileged", "--uncompress-priv-app-dex",
-             apk, os.path.join(TREE, ".apk-check.stamp")],
-            capture_output=True, text=True,
-        )
-        if r.returncode != 0:
-            raise SystemExit(
-                "presigned APK check failed -- this would break the build:\n  %s"
-                % (r.stdout + r.stderr).strip()
-            )
-        print("apk: presigned/privileged/preprocessed checks pass")
+    JARS = [
+        "system_x/system/framework/oplus-framework.jar",
+        "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.jar",
+        "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.adapter.jar",
+    ]
+
+    def _dex_names(path):
+        with zipfile.ZipFile(path) as z:
+            return sorted(n for n in z.namelist()
+                          if n.startswith("classes") and n.endswith(".dex"))
+
+    have = _dex_names(apk)
+    if len(have) > 33:
+        print("apk: framework dex already appended (%d dex)" % len(have))
     else:
-        print("apk: checker or apk missing, skipped")
+        nxt = len(have) + 1
+        added = []
+        with zipfile.ZipFile(apk, "a", zipfile.ZIP_STORED) as out:
+            for jar in JARS:
+                jp = os.path.join(STOCK, jar)
+                if not os.path.isfile(jp):
+                    raise SystemExit("missing jar for dex append: " + jp)
+                with zipfile.ZipFile(jp) as jz:
+                    for n in _dex_names(jp):
+                        # ZIP_STORED: a privileged app's dex must not be compressed.
+                        out.writestr("classes%d.dex" % nxt, jz.read(n))
+                        added.append("classes%-2d <- %s!%s" % (nxt, os.path.basename(jar), n))
+                        nxt += 1
+        # The stock v2 signature is void now; strip it so Soong re-signs cleanly.
+        subprocess.run(["zip", "-q", "-d", apk,
+                        "META-INF/*.RSA", "META-INF/*.SF", "META-INF/MANIFEST.MF"],
+                       capture_output=True)
+        print("apk: appended %d dex" % len(added))
+        for a in added:
+            print("       " + a)
+
+    # Validate what actually matters now that the APK is rebuilt rather than
+    # presigned: the expected dex count, and that none of them are compressed.
+    with zipfile.ZipFile(apk) as z:
+        dex = [i for i in z.infolist()
+               if i.filename.startswith("classes") and i.filename.endswith(".dex")]
+        deflated = [i.filename for i in dex if i.compress_type != zipfile.ZIP_STORED]
+    if len(dex) != 37:
+        raise SystemExit("apk: expected 37 dex after append, found %d" % len(dex))
+    if deflated:
+        raise SystemExit("apk: dex must be uncompressed for a priv-app, these are not: %s"
+                         % ", ".join(deflated))
+    print("apk: %d dex, all uncompressed" % len(dex))
 
     # ---------------- makefiles ----------------
     part_var = {"PRODUCT": "$(TARGET_COPY_OUT_PRODUCT)", "ODM": "$(TARGET_COPY_OUT_ODM)",
