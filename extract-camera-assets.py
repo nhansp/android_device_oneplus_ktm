@@ -94,6 +94,34 @@ def main():
     shutil.copy2(os.path.join(STOCK, "system_x/system/framework/oplus-framework.jar"),
                  os.path.join(STAGED, "system/framework/oplus-framework.jar"))
 
+    # --------------- normalise + validate shipped XML ---------------
+    # ColorOS ships at least one permissions XML with "<? xml" (a space before
+    # the PI target). AOSP's systemfeatures-gen-tool parses every permissions
+    # XML in the product at build time and rejects it, which is fatal to
+    # systemfeatures-gen-srcs and therefore to nearly the whole build.
+    # Normalise here, then parse, so a future stock drop that is malformed some
+    # other way fails in this script instead of minutes into a build.
+    import xml.dom.minidom
+
+    fixed = 0
+    for root, _, names in os.walk(PROP):
+        for n in names:
+            if not n.endswith(".xml"):
+                continue
+            fp = os.path.join(root, n)
+            raw = open(fp, "rb").read()
+            norm = raw.replace(b"<? xml", b"<?xml", 1)
+            if norm != raw:
+                open(fp, "wb").write(norm)
+                fixed += 1
+            try:
+                xml.dom.minidom.parse(fp)
+            except Exception as e:
+                raise SystemExit(
+                    "malformed XML would break the build: %s\n  %s" % (fp, e)
+                )
+    print("xml: %d normalised, all parse" % fixed)
+
     # ---------------- makefiles ----------------
     part_var = {"PRODUCT": "$(TARGET_COPY_OUT_PRODUCT)", "ODM": "$(TARGET_COPY_OUT_ODM)",
                 "SYSTEM_EXT": "$(TARGET_COPY_OUT_SYSTEM_EXT)"}
