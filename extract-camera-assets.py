@@ -32,10 +32,12 @@ FILES = [
      "product/framework/com.oplus.camera.unit.sdk.adapter.jar", "PRODUCT"),
     ("my_product/product_overlay/etc/permissions/com.oplus.camera.unit.sdk_product.xml",
      "product/etc/permissions/com.oplus.camera.unit.sdk_product.xml", "PRODUCT"),
-    # Declares all 53 com.oplus.permission.safe.* names (package "oplus", a resource-only
-    # APK). Without it com.oplus.permission.safe.CAMERA is undeclared and can never be
-    # granted -- see AGENTS.md 21r. Path mirrors stock; if PackageManager turns out not to
-    # scan system_ext/framework, move it to system_ext/priv-app.
+    # A resource-only APK that oplus-framework.jar looks up by path. It also declares
+    # all 53 com.oplus.permission.safe.* names, but do NOT move it to priv-app hoping to
+    # get those declared: its package name is literally "oplus", and AOSP's parser rejects
+    # a package name with no '.' ("Invalid manifest package"). On ColorOS it is never
+    # installed as a package either -- the permissions come from the patched platform
+    # manifest. Tested both locations on b8; see AGENTS.md 21ar, which corrects 21r.
     ("system_ext_x/framework/oplus-framework-res.apk",
      "system_ext/framework/oplus-framework-res.apk", "SYSTEM_EXT"),
 ]
