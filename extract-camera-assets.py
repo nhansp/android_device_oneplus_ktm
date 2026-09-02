@@ -40,6 +40,15 @@ FILES = [
      "system_ext/framework/oplus-framework-res.apk", "SYSTEM_EXT"),
 ]
 
+# Jars whose dex is inlined into the APK -- see "append the OPlus framework dex".
+# Nothing in this list may also be declared as a shared library; see the XML pass.
+JARS = [
+    "system_x/system/framework/oplus-framework.jar",
+    "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.jar",
+    "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.adapter.jar",
+]
+
+
 def sh(*a):
     return subprocess.run(a, capture_output=True, text=True).stdout
 
@@ -134,7 +143,9 @@ def main():
     # other way fails in this script instead of minutes into a build.
     import xml.dom.minidom
 
+    inlined = set(os.path.basename(j) for j in JARS)
     fixed = 0
+    unshared = 0
     for root, _, names in os.walk(PROP):
         for n in names:
             if not n.endswith(".xml"):
@@ -146,12 +157,31 @@ def main():
                 open(fp, "wb").write(norm)
                 fixed += 1
             try:
-                xml.dom.minidom.parse(fp)
+                doc = xml.dom.minidom.parse(fp)
             except Exception as e:
                 raise SystemExit(
                     "malformed XML would break the build: %s\n  %s" % (fp, e)
                 )
-    print("xml: %d normalised, all parse" % fixed)
+            # A <library> entry makes the jar a *parent* class loader of every app
+            # that <uses-library>s it, and parent-first resolution means the jar's
+            # own copy of a class wins over the app's. The JARS above are inlined
+            # into the APK precisely because they reference com.oplus.wrapper.*,
+            # which exists nowhere on this device but inside the APK -- so the
+            # shared-library copy can never resolve it, and the app dies on the
+            # first SDK call. Drop the declaration and let the inlined dex serve.
+            # See AGENTS.md 21ao.
+            drop = [e for e in doc.getElementsByTagName("library")
+                    if os.path.basename(e.getAttribute("file")) in inlined]
+            for e in drop:
+                print("xml: %s: not declaring shared library %s (inlined into the APK)"
+                      % (n, e.getAttribute("name")))
+                e.parentNode.removeChild(e)
+                unshared += 1
+            if drop:
+                with open(fp, "wb") as fh:
+                    fh.write(doc.toxml("utf-8"))
+    print("xml: %d normalised, %d shared-library declarations dropped, all parse"
+          % (fixed, unshared))
 
     # --------------- append the OPlus framework dex ---------------
     # Stock's 33 dex carry none of the com.oplus.* framework classes the app
@@ -160,11 +190,6 @@ def main():
     import zipfile
 
     apk = os.path.join(PROP, "product/app/OplusCamera/OplusCamera.apk")
-    JARS = [
-        "system_x/system/framework/oplus-framework.jar",
-        "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.jar",
-        "my_product/product_overlay/framework/com.oplus.camera.unit.sdk.adapter.jar",
-    ]
 
     def _dex_names(path):
         with zipfile.ZipFile(path) as z:
